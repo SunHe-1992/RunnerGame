@@ -1,0 +1,23 @@
+Game Programming Assignment-2 [bg music]
+
+Movement
+--------
+
+	.Running : https://assetstore.unity.com/packages/audio/sound-fx/classic-footstep-sfx-173668
+	.Jump/left/right/duck: download
+
+	.Other: https://assetstore.unity.com/packages/audio/sound-fx/free-casual-soundfx-pack-164843
+
+Background music:
+
+	Scene 1: https://assetstore.unity.com/packages/audio/music/destructive-force-free-action-music-205757
+	Scene 2: https://assetstore.unity.com/packages/audio/music/military-shooter-music-pack-219907
+	Scene 3: https://assetstore.unity.com/packages/audio/music/electronic/cyberware-game-music-pack-216764
+	
+	Main Menu: https://assetstore.unity.com/packages/audio/music/sci-fi-underscore-music-254210
+
+	Pause Screen: https://assetstore.unity.com/packages/audio/music/sc-fi-music-214312
+	
+
+
+Maybe? [diff vibe] => https://assetstore.unity.com/packages/audio/music/free-music-tracks-for-games-156413
