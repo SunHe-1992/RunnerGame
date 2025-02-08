@@ -14,4 +14,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Pause.unity
     guid: 81f27542619920d4683c9c3831b72878
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 59250eb89b7a2bd45931479578fb5bbe, type: 2}

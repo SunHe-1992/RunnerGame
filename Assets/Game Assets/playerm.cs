@@ -4,37 +4,110 @@ public class PlayerMovement : MonoBehaviour
 {
     public Animator playerAnim;
     public Rigidbody playerRigid;
-    public float moveSpeed = 5f;
+    public Transform playerVisual;
+    public float moveSpeed = 3f;
+    public float lrSpeed = 9f;
     public float rotationSpeed = 180f;
+    public float jumpForce = 10f;
+    public float crouchScale = 0.5f;
+    public Transform groundCheck;
+    public LayerMask groundMask;
+    public CapsuleCollider capsuleCollider;
 
-    void Update()
+    private bool isGrounded;
+
+    public void MoveForward()
     {
-        // Check for movement input
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        transform.Translate(Vector3.forward * Time.deltaTime * moveSpeed, Space.World);
+        playerAnim.SetTrigger("run");
+    }
 
-        // Calculate movement direction
-        Vector3 movement = new Vector3(horizontal, 0f, vertical).normalized;
-
-        // Check if there is any movement input
-        if (movement.magnitude >= 0.1f)
+    public void Jump()
+    {
+        if (isGrounded)
         {
-            // Calculate and apply the rotation
-            float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSpeed, 0.1f);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            // Calculate and apply the movement
-            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            playerRigid.MovePosition(transform.position + moveDirection * moveSpeed * Time.deltaTime);
-
-            // Set "Run" trigger in the animator
-            playerAnim.SetBool("run", true);
+            playerRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
+            playerAnim.SetTrigger("jump");
         }
-        else
+    }
+
+    public void Crouch()
+    {
+        playerAnim.SetTrigger("slide");
+        capsuleCollider.height = 0.8258972f;
+        capsuleCollider.center = new Vector3(0.006896973f, -0.423111f, 0.1062469f);
+    }
+
+    public void ResetCrouch()
+    {
+        capsuleCollider.height = 1.916809f;
+        capsuleCollider.center = new Vector3(0.006896973f, 0.03842163f, 0.1062469f);
+    }
+
+    public void MoveLeft()
+    {
+        transform.Translate(Vector3.left * Time.deltaTime * lrSpeed);
+    }
+
+    public void MoveRight()
+    {
+        transform.Translate(Vector3.right * Time.deltaTime * lrSpeed);
+    }
+
+    private void Update()
+    {
+        // Keep moving forward continuously
+        Vector3 moveDirection = transform.forward * moveSpeed;
+        playerRigid.MovePosition(transform.position + moveDirection * Time.deltaTime);
+
+        // Check for jump input
+        if (Input.GetKeyDown(KeyCode.W) && isGrounded)
         {
-            // No movement input, set "Run" trigger to false and play "Idle" animation
-            playerAnim.SetBool("idle", true);
+            Jump();
         }
+
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            playerAnim.SetTrigger("run");
+        }
+
+        // Check for crouch input
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Crouch();
+        }
+        else if (Input.GetKeyUp(KeyCode.S))
+        {
+            ResetCrouch();
+            playerAnim.SetTrigger("run");
+        }
+
+        // Check for flip input
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            playerAnim.SetTrigger("flip");
+        }
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            playerAnim.SetTrigger("run");
+        }
+
+        // Check for left/right movement input
+        if (Input.GetKey(KeyCode.A))
+        {
+            MoveLeft();
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            MoveRight();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // Check if the player is grounded
+        isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundMask);
     }
 }
